@@ -1,0 +1,378 @@
+fileFormatVersion: 2
+guid: 82375106b8f90253a881f1fc6f9a7f5c
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 5454205807244859887
+    second: true_transparent_multiplier_labels_0
+  - first:
+      213: 6672353006702996965
+    second: true_transparent_multiplier_labels_1
+  - first:
+      213: 2524938131079106718
+    second: true_transparent_multiplier_labels_2
+  - first:
+      213: 7061201064385110719
+    second: true_transparent_multiplier_labels_3
+  - first:
+      213: -302220725699853285
+    second: true_transparent_multiplier_labels_4
+  - first:
+      213: 8557267457473143737
+    second: true_transparent_multiplier_labels_5
+  - first:
+      213: -7123070931453045188
+    second: true_transparent_multiplier_labels_6
+  - first:
+      213: 7259887996790398233
+    second: true_transparent_multiplier_labels_7
+  - first:
+      213: -6260425589299872538
+    second: true_transparent_multiplier_labels_8
+  - first:
+      213: 1755035166916999482
+    second: true_transparent_multiplier_labels_9
+  - first:
+      213: -1112952268826918630
+    second: true_transparent_multiplier_labels_10
+  - first:
+      213: 3892889813400238823
+    second: true_transparent_multiplier_labels_11
+  - first:
+      213: 5269337031330010866
+    second: true_transparent_multiplier_labels_12
+  - first:
+      213: -6942578621164205511
+    second: true_transparent_multiplier_labels_13
+  - first:
+      213: 3819485709660655689
+    second: true_transparent_multiplier_labels_14
+  - first:
+      213: 3297358396890553635
+    second: true_transparent_multiplier_labels_15
+  - first:
+      213: 7382714773780429387
+    second: true_transparent_multiplier_labels_16
+  - first:
+      213: 1914507861456825051
+    second: true_transparent_multiplier_labels_17
+  - first:
+      213: -2777217141212754398
+    second: true_transparent_multiplier_labels_18
+  - first:
+      213: 4638787680642487287
+    second: true_transparent_multiplier_labels_19
+  - first:
+      213: -4048820049580433579
+    second: true_transparent_multiplier_labels_20
+  - first:
+      213: -2108315461637992027
+    second: true_transparent_multiplier_labels_21
+  - first:
+      213: -2359263600202408946
+    second: true_transparent_multiplier_labels_22
+  - first:
+      213: -6676638149293628799
+    second: true_transparent_multiplier_labels_23
+  - first:
+      213: -2004560392042025070
+    second: true_transparent_multiplier_labels_24
+  - first:
+      213: -655315243797640635
+    second: true_transparent_multiplier_labels_25
+  - first:
+      213: 6408822386546532746
+    second: true_transparent_multiplier_labels_26
+  - first:
+      213: 474073944335336215
+    second: true_transparent_multiplier_labels_27
+  - first:
+      213: -3318183251532802296
+    second: true_transparent_multiplier_labels_28
+  - first:
+      213: 3847294708804392813
+    second: true_transparent_multiplier_labels_29
+  - first:
+      213: 934417697008537032
+    second: true_transparent_multiplier_labels_30
+  - first:
+      213: -793692929529994630
+    second: true_transparent_multiplier_labels_31
+  - first:
+      213: 3973378428181132359
+    second: true_transparent_multiplier_labels_32
+  - first:
+      213: 2425323032255301816
+    second: true_transparent_multiplier_labels_33
+  - first:
+      213: 4737583474191033321
+    second: true_transparent_multiplier_labels_34
+  - first:
+      213: -411325572884934059
+    second: true_transparent_multiplier_labels_35
+  - first:
+      213: 8186159872707365291
+    second: true_transparent_multiplier_labels_36
+  - first:
+      213: 7757246840398264257
+    second: true_transparent_multiplier_labels_37
+  - first:
+      213: 7314263987635842135
+    second: true_transparent_multiplier_labels_38
+  - first:
+      213: 1638536213894352387
+    second: true_transparent_multiplier_labels_39
+  - first:
+      213: 2091639833798135432
+    second: true_transparent_multiplier_labels_40
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 350
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: true_transparent_multiplier_labels_0
+      rect:
+        serializedVersion: 2
+        x: 175
+        y: 608
+        width: 236
+        height: 297
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fe9d3b8b84b31bb40800000000000000
+      internalID: 5454205807244859887
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: true_transparent_multiplier_labels_1
+      rect:
+        serializedVersion: 2
+        x: 664
+        y: 608
+        width: 231
+        height: 291
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5edaa8c35b5f89c50800000000000000
+      internalID: 6672353006702996965
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: true_transparent_multiplier_labels_2
+      rect:
+        serializedVersion: 2
+        x: 1121
+        y: 608
+        width: 250
+        height: 294
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e901fce3ad16a0320800000000000000
+      internalID: 2524938131079106718
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: true_transparent_multiplier_labels_3
+      rect:
+        serializedVersion: 2
+        x: 171
+        y: 175
+        width: 233
+        height: 293
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fb2e84ac4fc6ef160800000000000000
+      internalID: 7061201064385110719
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: true_transparent_multiplier_labels_4
+      rect:
+        serializedVersion: 2
+        x: 661
+        y: 157
+        width: 233
+        height: 303
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b1446e8e9db4ecbf0800000000000000
+      internalID: -302220725699853285
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: true_transparent_multiplier_labels_5
+      rect:
+        serializedVersion: 2
+        x: 1126
+        y: 172
+        width: 246
+        height: 298
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9b362ba0a6581c670800000000000000
+      internalID: 8557267457473143737
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: b4bed1a744be5463b81037b3a6fd3ac3
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      true_transparent_multiplier_labels_0: 5454205807244859887
+      true_transparent_multiplier_labels_1: 6672353006702996965
+      true_transparent_multiplier_labels_2: 2524938131079106718
+      true_transparent_multiplier_labels_3: 7061201064385110719
+      true_transparent_multiplier_labels_4: -302220725699853285
+      true_transparent_multiplier_labels_5: 8557267457473143737
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
