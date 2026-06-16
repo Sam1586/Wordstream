@@ -10,6 +10,7 @@ public class SettingsMenu : MonoBehaviour
     private const string ResolutionKey = "Settings.Resolution";
 
     [Header("Panel")]
+    public GameObject panelRoot;
     public GameObject settingsPanel;
 
     [Header("Audio")]
@@ -27,17 +28,45 @@ public class SettingsMenu : MonoBehaviour
     private Resolution[] resolutions;
     private bool isInitializing;
     private static int escapeCloseFrame = -1;
+    private bool savedCursorVisible;
+    private CursorLockMode savedCursorLockState;
+    private bool hasSavedCursorState;
 
     void Awake()
+    {
+        SetupPanelReferences();
+        EnterSettingsInputMode();
+        if (!IsOpen())
+        {
+            RestoreCursorState();
+        }
+
+        SetupResolutionDropdown();
+        LoadSettings();
+        RegisterUIEvents();
+    }
+
+    void OnDisable()
+    {
+        RestoreCursorState();
+    }
+
+    private void SetupPanelReferences()
     {
         if (settingsPanel == null)
         {
             settingsPanel = gameObject;
         }
 
-        SetupResolutionDropdown();
-        LoadSettings();
-        RegisterUIEvents();
+        if (panelRoot == null)
+        {
+            panelRoot = settingsPanel;
+
+            if (settingsPanel.transform.parent != null)
+            {
+                panelRoot = settingsPanel.transform.parent.gameObject;
+            }
+        }
     }
 
     void Update()
@@ -51,22 +80,39 @@ public class SettingsMenu : MonoBehaviour
 
     public void Open()
     {
+        SetupPanelReferences();
+        panelRoot.SetActive(true);
         settingsPanel.SetActive(true);
+        EnterSettingsInputMode();
     }
 
     public void Close()
     {
         settingsPanel.SetActive(false);
+        if (panelRoot != settingsPanel)
+        {
+            panelRoot.SetActive(false);
+        }
+
+        RestoreCursorState();
     }
 
     public void TogglePanel()
     {
-        settingsPanel.SetActive(!settingsPanel.activeSelf);
+        if (IsOpen())
+        {
+            Close();
+        }
+        else
+        {
+            Open();
+        }
     }
 
     public bool IsOpen()
     {
-        return settingsPanel != null && settingsPanel.activeInHierarchy;
+        return panelRoot != null && panelRoot.activeInHierarchy &&
+               settingsPanel != null && settingsPanel.activeInHierarchy;
     }
 
     public static bool EscapeClosedSettingsThisFrame()
@@ -195,6 +241,31 @@ public class SettingsMenu : MonoBehaviour
         {
             exitButton.onClick.AddListener(ExitGame);
         }
+    }
+
+    private void EnterSettingsInputMode()
+    {
+        if (!hasSavedCursorState)
+        {
+            savedCursorVisible = Cursor.visible;
+            savedCursorLockState = Cursor.lockState;
+            hasSavedCursorState = true;
+        }
+
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
+    }
+
+    private void RestoreCursorState()
+    {
+        if (!hasSavedCursorState || AnySettingsMenuOpen())
+        {
+            return;
+        }
+
+        Cursor.visible = savedCursorVisible;
+        Cursor.lockState = savedCursorLockState;
+        hasSavedCursorState = false;
     }
 
     private void SetupResolutionDropdown()

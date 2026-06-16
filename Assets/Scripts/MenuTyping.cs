@@ -1342,6 +1342,12 @@ public class MenuTyping : MonoBehaviour
         if (settingsPanel != null)
         {
             settingsPanel.SetActive(true);
+
+            SettingsMenu settingsMenu = settingsPanel.GetComponentInChildren<SettingsMenu>(true);
+            if (settingsMenu != null)
+            {
+                settingsMenu.Open();
+            }
         }
     }
 
