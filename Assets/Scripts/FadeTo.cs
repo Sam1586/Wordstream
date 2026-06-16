@@ -18,6 +18,11 @@ public class FadeTo : MonoBehaviour
     void Awake()
     {
         DontDestroyOnLoad(this.gameObject);
+
+        if (fadePanel != null)
+        {
+            fadePanel.raycastTarget = false;
+        }
     }
 
     void Update()
@@ -47,6 +52,8 @@ public class FadeTo : MonoBehaviour
 
     IEnumerator FadeOut()
     {
+        fadePanel.raycastTarget = true;
+
         Color color = fadePanel.color;
         float startAlpha = color.a;
 
@@ -83,6 +90,7 @@ public class FadeTo : MonoBehaviour
 
         color.a = 0f;
         fadePanel.color = color;
+        fadePanel.raycastTarget = false;
     }
 
     IEnumerator ChangeSceneWithFade()

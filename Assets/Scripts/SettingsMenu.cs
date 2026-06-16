@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class SettingsMenu : MonoBehaviour
@@ -83,6 +84,7 @@ public class SettingsMenu : MonoBehaviour
         SetupPanelReferences();
         panelRoot.SetActive(true);
         settingsPanel.SetActive(true);
+        EnsureLegacyMouseInputModule();
         EnterSettingsInputMode();
     }
 
@@ -254,6 +256,25 @@ public class SettingsMenu : MonoBehaviour
 
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
+    }
+
+    private void EnsureLegacyMouseInputModule()
+    {
+        if (EventSystem.current == null)
+        {
+            GameObject eventSystemObject = new GameObject("EventSystem");
+            eventSystemObject.AddComponent<EventSystem>();
+            eventSystemObject.AddComponent<StandaloneInputModule>();
+            return;
+        }
+
+        StandaloneInputModule standaloneInputModule = EventSystem.current.GetComponent<StandaloneInputModule>();
+        if (standaloneInputModule == null)
+        {
+            standaloneInputModule = EventSystem.current.gameObject.AddComponent<StandaloneInputModule>();
+        }
+
+        standaloneInputModule.enabled = true;
     }
 
     private void RestoreCursorState()
