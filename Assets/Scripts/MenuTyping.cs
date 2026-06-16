@@ -17,6 +17,10 @@ public class MenuTyping : MonoBehaviour
     
     public Tilemap bonusTilemap;
 
+	[Header("SFX")]
+	public AudioSource typeAudio;
+	public AudioSource lockAudio;
+
     [Header("Tiles")]
     public Tile highlightTile;
 
@@ -112,6 +116,7 @@ public class MenuTyping : MonoBehaviour
     public CinemachineImpulseSource impulseSource;
 
     private bool settingsWasOpen = false;
+    private bool isTransitioningToGame = false;
 
     private bool SettingsPanelBlocksInput()
     {
@@ -547,7 +552,15 @@ public class MenuTyping : MonoBehaviour
 
 
 
-		impulseSource.GenerateImpulse();	
+        if (impulseSource != null)
+        {
+            impulseSource.GenerateImpulse();
+        }
+
+        if (lockAudio != null)
+        {
+            lockAudio.Play();
+        }
 
         currentLetterIndex = 0;
         
@@ -681,6 +694,11 @@ public class MenuTyping : MonoBehaviour
     
     void HandleWordVerification()
     {
+        if (isTransitioningToGame)
+        {
+            return;
+        }
+
         if (Input.GetKeyDown(KeyCode.Return))
         {
             string acc = "";
@@ -697,6 +715,8 @@ public class MenuTyping : MonoBehaviour
 
             if (acc == "play" || acc == "PLAY")
             {
+                isTransitioningToGame = true;
+                DisablePreviewWords();
                 fadeScript.Fade();
                 LockTempLetters();
             }
@@ -707,6 +727,15 @@ public class MenuTyping : MonoBehaviour
             }
         }
         
+    }
+
+    void DisablePreviewWords()
+    {
+        BlinkTimer[] blinkTimers = FindObjectsOfType<BlinkTimer>();
+        for (int i = 0; i < blinkTimers.Length; i++)
+        {
+            blinkTimers[i].DisableBlinking();
+        }
     }
 
     int CheckNotFloating() //return the number of elements that have a neighbor that is locked in
@@ -1188,6 +1217,16 @@ public class MenuTyping : MonoBehaviour
                             
 
                             currentLetterIndex++;
+
+                            if (impulseSource != null)
+                            {
+                                impulseSource.GenerateImpulse();
+                            }
+
+                            if (typeAudio != null)
+                            {
+                                typeAudio.PlayOneShot(typeAudio.clip);
+                            }
 
                             UpdateSelectedTile();
                         }

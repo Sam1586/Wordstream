@@ -6,6 +6,7 @@ using UnityEngine.Tilemaps;
 using TMPro;
 using System.Linq;
 using Unity.Cinemachine;
+using UnityEngine.UI;
 
 public class Typing : MonoBehaviour
 {
@@ -103,6 +104,14 @@ public class Typing : MonoBehaviour
     public GameObject newWordLayoutGroup;
     [SerializeField] private GameOverUI gameOverUI;
 
+    [Header("Health UI")]
+    [SerializeField] private TextMeshProUGUI healthText;
+    [SerializeField] private Transform healthHeartParent;
+    [SerializeField] private Sprite healthHeartSprite;
+    [SerializeField] private Vector2 healthHeartSize = new Vector2(48f, 48f);
+    [SerializeField] private float healthHeartSpacing = 40f;
+    private readonly List<GameObject> healthHeartObjects = new List<GameObject>();
+
     [Header("Settings")] 
     [SerializeField] public int boardSize;
     [SerializeField] public bool useBonus;
@@ -161,6 +170,8 @@ public class Typing : MonoBehaviour
         {
             InitializeBonusScores();
         }
+
+        UpdateHealthUI();
 
     }
 
@@ -390,15 +401,15 @@ public class Typing : MonoBehaviour
 		letterValues.Add('i', 1);
 		letterValues.Add('j', 8);
 		letterValues.Add('k', 5);
-		letterValues.Add('l', 2);
-		letterValues.Add('m', 2);
-		letterValues.Add('n', 2);
+		letterValues.Add('l', 1);
+		letterValues.Add('m', 1);
+		letterValues.Add('n', 1);
 		letterValues.Add('o', 1);
 		letterValues.Add('p', 3);
 		letterValues.Add('q', 8);
-		letterValues.Add('r', 2);
-		letterValues.Add('s', 2);
-		letterValues.Add('t', 2);
+		letterValues.Add('r', 1);
+		letterValues.Add('s', 1);
+		letterValues.Add('t', 1);
 		letterValues.Add('u', 1);
 		letterValues.Add('v', 4);
 		letterValues.Add('w', 4);
@@ -417,15 +428,15 @@ public class Typing : MonoBehaviour
         letterValues.Add('I', 1);
         letterValues.Add('J', 8);
         letterValues.Add('K', 5);
-        letterValues.Add('L', 2);
-        letterValues.Add('M', 2);
-        letterValues.Add('N', 2);
+        letterValues.Add('L', 1);
+        letterValues.Add('M', 1);
+        letterValues.Add('N', 1);
         letterValues.Add('O', 1);
         letterValues.Add('P', 3);
         letterValues.Add('Q', 8);
-        letterValues.Add('R', 2);
-        letterValues.Add('S', 2);
-        letterValues.Add('T', 2);
+        letterValues.Add('R', 1);
+        letterValues.Add('S', 1);
+        letterValues.Add('T', 1);
         letterValues.Add('U', 1);
         letterValues.Add('V', 4);
         letterValues.Add('W', 4);
@@ -1084,6 +1095,7 @@ public class Typing : MonoBehaviour
     void ResetLetters(){
         letterBank.Clear();
         health -= 1;
+        UpdateHealthUI();
         ClearTempLetters();
         
         while (letterBank.Count < letterBankSize)
@@ -1115,13 +1127,74 @@ public class Typing : MonoBehaviour
         }
 
         gameOverShown = true;
+        ResolveGameOverUI();
 
         if (gameOverUI != null)
         {
             gameOverUI.Show(score, longestWord);
         }
+        else
+        {
+            Debug.LogWarning("Game Over UI is not assigned and could not be found in the scene.");
+        }
 
         Debug.Log("Game Over");
+    }
+
+    void UpdateHealthUI()
+    {
+        int currentHealth = Mathf.Max(0, Mathf.FloorToInt(health));
+
+        if (healthText != null)
+        {
+            healthText.text = currentHealth.ToString();
+        }
+
+        if (healthHeartParent == null || healthHeartSprite == null)
+        {
+            return;
+        }
+
+        for (int i = 0; i < healthHeartObjects.Count; i++)
+        {
+            Destroy(healthHeartObjects[i]);
+        }
+
+        healthHeartObjects.Clear();
+
+        for (int i = 0; i < currentHealth; i++)
+        {
+            GameObject heartObject = new GameObject("Health Heart " + (i + 1), typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+            heartObject.transform.SetParent(healthHeartParent, false);
+
+            RectTransform heartTransform = heartObject.GetComponent<RectTransform>();
+            heartTransform.sizeDelta = healthHeartSize;
+            heartTransform.anchoredPosition = new Vector2(i * healthHeartSpacing, 0f);
+
+            Image heartImage = heartObject.GetComponent<Image>();
+            heartImage.sprite = healthHeartSprite;
+            heartImage.preserveAspect = true;
+
+            healthHeartObjects.Add(heartObject);
+        }
+    }
+
+    void ResolveGameOverUI()
+    {
+        if (gameOverUI != null)
+        {
+            return;
+        }
+
+        GameOverUI[] gameOverUIs = Resources.FindObjectsOfTypeAll<GameOverUI>();
+        for (int i = 0; i < gameOverUIs.Length; i++)
+        {
+            if (gameOverUIs[i].gameObject.scene == gameObject.scene)
+            {
+                gameOverUI = gameOverUIs[i];
+                return;
+            }
+        }
     }
     
 
@@ -1563,7 +1636,7 @@ public class Typing : MonoBehaviour
     {
         CheckTime();
 
-        if (health <= 0)
+        if (health < 1)
         {
             ShowGameOver();
             return;

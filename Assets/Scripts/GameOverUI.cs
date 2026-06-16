@@ -16,9 +16,8 @@ public class GameOverUI : MonoBehaviour
     [Header("Scene Names")]
     [SerializeField] private string mainMenuSceneName = "Menu";
 
-    [Header("Animation")]
-    [SerializeField] private Animator pageAnimator;
-    [SerializeField] private string dropDownTrigger = "DropDown";
+    [Header("Root")]
+    [SerializeField] private GameObject gameOverParent;
 
     private int pendingScore;
     private string pendingLongestWord = "";
@@ -39,7 +38,6 @@ public class GameOverUI : MonoBehaviour
     void OnEnable()
     {
         ApplyText();
-        PlayDropDownAnimation();
     }
 
     public void Show(int finalScore, string longestWord)
@@ -47,7 +45,15 @@ public class GameOverUI : MonoBehaviour
         pendingScore = finalScore;
         pendingLongestWord = longestWord;
         ApplyText();
-        gameObject.SetActive(true);
+
+        if (gameOverParent != null)
+        {
+            gameOverParent.SetActive(true);
+        }
+        else
+        {
+            gameObject.SetActive(true);
+        }
     }
 
     private void ApplyText()
@@ -61,15 +67,6 @@ public class GameOverUI : MonoBehaviour
         {
             string displayWord = string.IsNullOrEmpty(pendingLongestWord) ? "-" : pendingLongestWord.ToUpper();
             longestWordText.text = "Longest Word: " + displayWord;
-        }
-    }
-
-    private void PlayDropDownAnimation()
-    {
-        if (pageAnimator != null && !string.IsNullOrEmpty(dropDownTrigger))
-        {
-            pageAnimator.ResetTrigger(dropDownTrigger);
-            pageAnimator.SetTrigger(dropDownTrigger);
         }
     }
 

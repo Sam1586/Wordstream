@@ -10,6 +10,7 @@ public class BlinkTimer : MonoBehaviour
     public GameObject[] objects;
     private int index;
     private bool wasTyping;
+    private bool blinkingDisabled;
     private Coroutine blinkCoroutine;
 
     void Start()
@@ -19,6 +20,11 @@ public class BlinkTimer : MonoBehaviour
 
     void Update()
     {
+        if (blinkingDisabled)
+        {
+            return;
+        }
+
         bool isTyping = WordIsBeingTyped();
 
         if (isTyping && !wasTyping)
@@ -32,6 +38,13 @@ public class BlinkTimer : MonoBehaviour
             wasTyping = false;
             blinkCoroutine = StartCoroutine(Blink());
         }
+    }
+
+    public void DisableBlinking()
+    {
+        blinkingDisabled = true;
+        StopBlinking();
+        SetAllObjectsActive(false);
     }
 
     IEnumerator Blink()
