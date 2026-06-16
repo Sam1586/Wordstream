@@ -112,6 +112,17 @@ public class MenuTyping : MonoBehaviour
     public CinemachineImpulseSource impulseSource;
 
     private bool settingsWasOpen = false;
+
+    private bool SettingsPanelBlocksInput()
+    {
+        if (settingsPanel == null || !settingsPanel.activeInHierarchy)
+        {
+            return false;
+        }
+
+        SettingsMenu settingsMenu = settingsPanel.GetComponentInChildren<SettingsMenu>(true);
+        return settingsMenu == null || settingsMenu.IsOpen();
+    }
     
     void Start()
     {
@@ -1002,7 +1013,7 @@ public class MenuTyping : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (settingsPanel != null && settingsPanel.activeInHierarchy)
+        if (SettingsPanelBlocksInput())
         {
             settingsWasOpen = true;
             return;
@@ -1018,7 +1029,7 @@ public class MenuTyping : MonoBehaviour
         
         HandleWordVerification();
 
-        if (settingsPanel != null && settingsPanel.activeInHierarchy)
+        if (SettingsPanelBlocksInput())
         {
             return;
         }

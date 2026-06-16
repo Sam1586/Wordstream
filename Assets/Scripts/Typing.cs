@@ -101,6 +101,7 @@ public class Typing : MonoBehaviour
     public TextMeshProUGUI ScoreUI;
     public GameObject newWordText;
     public GameObject newWordLayoutGroup;
+    [SerializeField] private GameOverUI gameOverUI;
 
     [Header("Settings")] 
     [SerializeField] public int boardSize;
@@ -127,8 +128,10 @@ public class Typing : MonoBehaviour
     public int refreshThreshold;
 
     public HashSet<string> createdWords = new HashSet<string>();
+    private string longestWord = "";
 
     private bool firstWord = true;
+    private bool gameOverShown = false;
 
 	[Header("Effects")]
 	public GameObject lockedTileEffect;
@@ -758,6 +761,36 @@ public class Typing : MonoBehaviour
 
         return false;
     }
+
+    bool UsesLockedWordLetter()
+    {
+        for (int i = 0; i < temporaryLetterTiles.Count; i++)
+        {
+            Vector3Int tilePos = temporaryLetterTiles[i];
+
+            if (lockedStrDictionary.ContainsKey(tilePos) && !spawnLockedDictionary.ContainsKey(tilePos))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    int CountNewTemporaryLetters()
+    {
+        int count = 0;
+
+        for (int i = 0; i < temporaryLetterTiles.Count; i++)
+        {
+            if (!lockedStrDictionary.ContainsKey(temporaryLetterTiles[i]))
+            {
+                count += 1;
+            }
+        }
+
+        return count;
+    }
     
 	IEnumerator PopTile(RectTransform tileVisual)
 	{
@@ -911,6 +944,7 @@ public class Typing : MonoBehaviour
             
             
             int floatingProofs = CheckNotFloating();
+            bool usesLockedWordLetter = UsesLockedWordLetter();
             
             /*
             Debug.Log("Amount of Letters with a Locked Neighbor: " + floatingProofs);
@@ -918,9 +952,6 @@ public class Typing : MonoBehaviour
             Debug.Log("Lengthened String: " + fullAcc);
             Debug.Log("Difference in lengthenedstring and regular" + (fullAcc.Length - acc.Length));
             */
-
-            int intToSubtract = (fullAcc.Length - acc.Length);
-
 
             List<Vector3Int> headTailPositions = new List<Vector3Int>();
             bool headOrTailLocked = false;
@@ -939,7 +970,7 @@ public class Typing : MonoBehaviour
                 }
             }
             
-            if (floatingProofs > 0 || headOrTailLocked || !onlyBuildOffWords || firstWord)
+            if (floatingProofs > 0 || headOrTailLocked || usesLockedWordLetter || !onlyBuildOffWords || firstWord)
             {
                 if (ValidWord.IsValidWord(fullAcc) && CheckNeighborWords() && AtLeastOneOriginalLetter() && !createdWords.Contains(fullAcc))
                 {
@@ -948,6 +979,7 @@ public class Typing : MonoBehaviour
                     int timeMultiplier = CheckForTimeMultiplier();
 
                     createdWords.Add(fullAcc);
+                    RegisterCompletedWord(fullAcc);
                     
                     //debugging
                     List<Vector3Int> crosswordPositions = new List<Vector3Int>();
@@ -1001,7 +1033,7 @@ public class Typing : MonoBehaviour
                     
                     if (useLetterBank)
                     {
-                        AddLetters(acc.Length - intToSubtract);
+                        AddLetters(CountNewTemporaryLetters());
                     }
                     
                     List<string> crossWords = new List<string>();
@@ -1013,6 +1045,7 @@ public class Typing : MonoBehaviour
 
                     for (int i = 0; i < crossWords.Count; i++)
                     {
+                        RegisterCompletedWord(crossWords[i]);
                         AddScore(crossWords[i], wordMultiplier, timeMultiplier);
                     }
 
@@ -1072,6 +1105,23 @@ public class Typing : MonoBehaviour
             ResetLetters();
             timeScript.timeBelowZero = false;
         }
+    }
+
+    void ShowGameOver()
+    {
+        if (gameOverShown)
+        {
+            return;
+        }
+
+        gameOverShown = true;
+
+        if (gameOverUI != null)
+        {
+            gameOverUI.Show(score, longestWord);
+        }
+
+        Debug.Log("Game Over");
     }
     
 
@@ -1157,6 +1207,14 @@ public class Typing : MonoBehaviour
         
         tempW.text = "" + stringToAdd.ToUpper() + " +" + scoreToAdd;
         
+    }
+
+    void RegisterCompletedWord(string completedWord)
+    {
+        if (!string.IsNullOrEmpty(completedWord) && completedWord.Length > longestWord.Length)
+        {
+            longestWord = completedWord;
+        }
     }
     
     private List<Vector3Int> GetCrossWordPositions()
@@ -1507,7 +1565,8 @@ public class Typing : MonoBehaviour
 
         if (health <= 0)
         {
-            Debug.Log("Game Over");
+            ShowGameOver();
+            return;
         }
 
         HandleMovementInput();

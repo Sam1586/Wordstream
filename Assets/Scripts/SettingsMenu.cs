@@ -13,6 +13,7 @@ public class SettingsMenu : MonoBehaviour
     [Header("Panel")]
     public GameObject panelRoot;
     public GameObject settingsPanel;
+    [SerializeField] private string closeAnimationStateName = "Close_UI";
 
     [Header("Audio")]
     public Slider masterVolumeSlider;
@@ -32,6 +33,7 @@ public class SettingsMenu : MonoBehaviour
     private bool savedCursorVisible;
     private CursorLockMode savedCursorLockState;
     private bool hasSavedCursorState;
+    private bool isClosing;
 
     void Awake()
     {
@@ -50,6 +52,7 @@ public class SettingsMenu : MonoBehaviour
     void OnDisable()
     {
         RestoreCursorState();
+        isClosing = false;
     }
 
     private void SetupPanelReferences()
@@ -82,6 +85,7 @@ public class SettingsMenu : MonoBehaviour
     public void Open()
     {
         SetupPanelReferences();
+        isClosing = false;
         panelRoot.SetActive(true);
         settingsPanel.SetActive(true);
         EnsureLegacyMouseInputModule();
@@ -90,10 +94,21 @@ public class SettingsMenu : MonoBehaviour
 
     public void Close()
     {
-        settingsPanel.SetActive(false);
-        if (panelRoot != settingsPanel)
+        isClosing = true;
+        Animator panelAnimator = panelRoot != null ? panelRoot.GetComponent<Animator>() : null;
+        if (panelAnimator != null && !string.IsNullOrEmpty(closeAnimationStateName))
         {
-            panelRoot.SetActive(false);
+            panelAnimator.Play(closeAnimationStateName, 0, 0f);
+        }
+        else
+        {
+            settingsPanel.SetActive(false);
+            if (panelRoot != settingsPanel)
+            {
+                panelRoot.SetActive(false);
+            }
+
+            isClosing = false;
         }
 
         RestoreCursorState();
@@ -113,8 +128,14 @@ public class SettingsMenu : MonoBehaviour
 
     public bool IsOpen()
     {
-        return panelRoot != null && panelRoot.activeInHierarchy &&
+        return !isClosing &&
+               panelRoot != null && panelRoot.activeInHierarchy &&
                settingsPanel != null && settingsPanel.activeInHierarchy;
+    }
+
+    public bool IsClosing()
+    {
+        return isClosing;
     }
 
     public static bool EscapeClosedSettingsThisFrame()
