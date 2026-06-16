@@ -110,6 +110,8 @@ public class MenuTyping : MonoBehaviour
     public FadeTo fadeScript;
 
     public CinemachineImpulseSource impulseSource;
+
+    private bool settingsWasOpen = false;
     
     void Start()
     {
@@ -679,9 +681,7 @@ public class MenuTyping : MonoBehaviour
 
             if (acc == "settings" || acc == "SETTINGS")
             {
-                ClearTempLetters();
-                settingsPanel.SetActive(true);
-                
+                OpenSettings();
             }
 
             if (acc == "play" || acc == "PLAY")
@@ -1002,9 +1002,26 @@ public class MenuTyping : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (settingsPanel != null && settingsPanel.activeInHierarchy)
+        {
+            settingsWasOpen = true;
+            return;
+        }
+
+        if (settingsWasOpen)
+        {
+            settingsWasOpen = false;
+            ResetMenuTypingPosition();
+        }
+
         HandleMovementInput();
         
         HandleWordVerification();
+
+        if (settingsPanel != null && settingsPanel.activeInHierarchy)
+        {
+            return;
+        }
         
         Vector2 mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
 
@@ -1273,11 +1290,11 @@ public class MenuTyping : MonoBehaviour
 
     }
 
-	public void FakeClick()
-	{
-			Vector2 mousePos = new Vector2(-3, 2);
-			horizontalInput = false;
-		   	Vector3Int clickedTile = highlightTilemap.WorldToCell(mousePos);
+    public void FakeClick()
+    {
+        Vector2 mousePos = new Vector2(-3, 2);
+        horizontalInput = false;
+        Vector3Int clickedTile = highlightTilemap.WorldToCell(mousePos);
 
             bool clickedCurrentTemp = false;
             
@@ -1314,7 +1331,38 @@ public class MenuTyping : MonoBehaviour
             }
             
             tileIsSelected = true;
-			UpdateSelectedTile();
+        UpdateSelectedTile();
+    }
+
+    void OpenSettings()
+    {
+        ResetMenuTypingPosition();
+        settingsWasOpen = true;
+
+        if (settingsPanel != null)
+        {
+            settingsPanel.SetActive(true);
+        }
+    }
+
+    void ResetMenuTypingPosition()
+    {
+        Vector2 mousePos = new Vector2(-3, 2);
+        Vector3Int clickedTile = highlightTilemap.WorldToCell(mousePos);
+
+        ClearTempLetters();
+        RemoveColumnRow();
+        selectedTilemap.SetTile(previousMousePos, transparentTile);
+        selectedTilemap.SetTile(selectedTile, transparentTile);
+
+        horizontalInput = false;
+        selectedTile = clickedTile;
+        previousMousePos = clickedTile;
+        currentLetterIndex = 0;
+
+        UpdateSelectedTile();
+        CreateColumnRow();
+        tileIsSelected = true;
+    }
+
 	}
-    
-}

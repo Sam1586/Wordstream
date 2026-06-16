@@ -24,6 +24,11 @@ public class FadeTo : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
+            if (SettingsMenu.EscapeClosedSettingsThisFrame() || SettingsMenu.AnySettingsMenuOpen())
+            {
+                return;
+            }
+
             if (switchScene == 1)
             {
                 StartCoroutine(FadeOut());

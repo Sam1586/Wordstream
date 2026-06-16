@@ -79,7 +79,7 @@ public class Typing : MonoBehaviour
     
     public struct BonusType
     {
-        public int type; // 0 for word multi, 1 for time multi
+        public int type; // 0 for time multi, 1 for word multi
         public int multiplier;
     };
 
@@ -958,14 +958,6 @@ public class Typing : MonoBehaviour
                     crossStrings = GetCrossWords();
                     
 
-                    // HashSet<Vector3Int> prevSet, Vector3Int startingTile, int index, Vector3Int currentTile
-
-                    HashSet<Vector3Int> emptySet = new HashSet<Vector3Int>();
-
-                    int x = checkEnclosed(emptySet, selectedTile, 0, selectedTile);
-
-                    Debug.Log("Enclosed Score Value: " + x);
-                    
                     for (int i = 0; i < crosswordPositions.Count; i++)
                     {
                         Debug.Log("Crossword neighbors" + crosswordPositions[i]);
@@ -1349,13 +1341,11 @@ public class Typing : MonoBehaviour
         {
             if (currentTempChars.Count > 0 && currentLetterIndex == currentTempChars.Count)
             {
-                if (!lockedStrDictionary.ContainsKey(temporaryLetterTiles[temporaryLetterTiles.Count - 1]))
+                if (useLetterBank && !lockedStrDictionary.ContainsKey(temporaryLetterTiles[temporaryLetterTiles.Count - 1]))
                 {
                     letterBank.Add(currentTempChars[currentTempChars.Count - 1].ToUpper());
+                    InitializeLetterBank();
                 }
-                
-                
-                InitializeLetterBank();
 
                 selectedTilemap.SetTile(selectedTile, transparentTile);
 
@@ -1532,7 +1522,7 @@ public class Typing : MonoBehaviour
             
             string s = Input.inputString;
 
-            if (!string.IsNullOrEmpty(s))
+            if (!string.IsNullOrEmpty(s) && s.Length == 1)
             {
 
                 if (lockedStrDictionary.ContainsKey(selectedTile))
@@ -1546,46 +1536,54 @@ public class Typing : MonoBehaviour
                 }
                     
                 
+                char c = char.ToUpperInvariant(s[0]);
+                s = c.ToString();
+
                 // if (wordTilemap.GetTile(selectedTile) != lockedLetterTile || lockedStrDictionary[selectedTile] == s.ToLower() || lockedStrDictionary[selectedTile] == s.ToUpper()) - OLD STATEMENT (LOCKEDLETTERTILE SWITCH)
                 
                 
-                    if (!lockedStrDictionary.ContainsKey(selectedTile) || lockedStrDictionary[selectedTile] == s.ToLower() || lockedStrDictionary[selectedTile] == s.ToUpper()) //THIS IS THE PROBLEM WE ARENT PASSING HERE
-                    {
-                        char c = s[0];
-
-                        c = char.ToUpperInvariant(c);
-                        
-                        
-                        string curs = c.ToString();
-                        bool inBank = true;
+                if (!lockedStrDictionary.ContainsKey(selectedTile) || lockedStrDictionary[selectedTile] == s.ToLower() || lockedStrDictionary[selectedTile] == s.ToUpper()) //THIS IS THE PROBLEM WE ARENT PASSING HERE
+                {
+                    string curs = c.ToString();
+                    bool inBank = true;
                 
-                        if (useLetterBank)
-                        {
-                            inBank = false;
+                    if (useLetterBank)
+                    {
+                        inBank = false;
+                        bool replacingUnlockedLetter = currentLetterIndex >= 0 &&
+                                                       currentLetterIndex < temporaryLetterTiles.Count &&
+                                                       !lockedStrDictionary.ContainsKey(temporaryLetterTiles[currentLetterIndex]);
                     
-                            for (int i = 0; i < letterBank.Count; i++)
+                        for (int i = 0; i < letterBank.Count; i++)
+                        {
+                            if (letterBank[i] == curs)
                             {
-                                if (letterBank[i] == curs)
-                                {
-                                    inBank = true;
-                                    break;
-                                }
+                                inBank = true;
+                                break;
                             }
                         }
 
-                        Debug.Log(selectedTile);
-
-                        Debug.Log("getting here");
-                        if (lockedStrDictionary.ContainsKey(selectedTile)) Debug.Log("Dictionary Value for SelectedTile: " + lockedStrDictionary[selectedTile]);
-                        
-                        
-                        Debug.Log(c.ToString());
-                        
-                        if (char.IsLetter(c) && inBank || char.IsLetter(c) && lockedStrDictionary.ContainsKey(selectedTile) && lockedStrDictionary[selectedTile] == c.ToString().ToLower() || 
-                            lockedStrDictionary.ContainsKey(selectedTile) && lockedStrDictionary[selectedTile] == c.ToString().ToUpper())
+                        if (!inBank && replacingUnlockedLetter && currentTempChars[currentLetterIndex].ToUpper() == curs)
                         {
+                            inBank = true;
+                        }
+                    }
 
-                            
+                    Debug.Log(selectedTile);
+
+                    Debug.Log("getting here");
+                    if (lockedStrDictionary.ContainsKey(selectedTile)) Debug.Log("Dictionary Value for SelectedTile: " + lockedStrDictionary[selectedTile]);
+
+                    Debug.Log(c.ToString());
+
+                    if (IsLetter(c) && (inBank || lockedStrDictionary.ContainsKey(selectedTile) &&
+                        (lockedStrDictionary[selectedTile] == c.ToString().ToLower() ||
+                         lockedStrDictionary[selectedTile] == c.ToString().ToUpper())))
+                    {
+
+                            string letterToRefund = null;
+                            bool skipLetterBankConsume = false;
+
                             selectedTilemap.SetTile(selectedTile, transparentTile);
                             if (currentLetterIndex < currentTempChars.Count)
                             {
@@ -1595,7 +1593,7 @@ public class Typing : MonoBehaviour
                                 if (currentLetterIndex < 0)
                                 {
 
-                                    currentTempChars.Insert(0, Input.inputString);
+                                    currentTempChars.Insert(0, s);
                                     temporaryLetterTiles.Insert(0, selectedTile);
                                     
                                     GameObject g1 = Instantiate(stringToTileScript.StringTile(s),
@@ -1611,8 +1609,11 @@ public class Typing : MonoBehaviour
                                 }
                                 else
                                 {
+                                    string previousLetter = currentTempChars[currentLetterIndex];
+                                    Vector3Int previousTile = temporaryLetterTiles[currentLetterIndex];
+
                                     currentTempChars.RemoveAt(currentLetterIndex);
-                                    currentTempChars.Insert(currentLetterIndex, Input.inputString);
+                                    currentTempChars.Insert(currentLetterIndex, s);
 
                                     temporaryLetterTiles.RemoveAt(currentLetterIndex);
                                     temporaryLetterTiles.Insert(currentLetterIndex, selectedTile);
@@ -1627,7 +1628,17 @@ public class Typing : MonoBehaviour
                                     Destroy(g2);
 
                                     temporaryTextTiles.Insert(currentLetterIndex, g1);
-                                    AddSpecificLetter(c);
+                                    if (useLetterBank && !lockedStrDictionary.ContainsKey(previousTile))
+                                    {
+                                        if (previousLetter.ToUpper() == curs)
+                                        {
+                                            skipLetterBankConsume = true;
+                                        }
+                                        else
+                                        {
+                                            letterToRefund = previousLetter.ToUpper();
+                                        }
+                                    }
                                 }
 
                                 //inserting mid word
@@ -1635,7 +1646,7 @@ public class Typing : MonoBehaviour
                             else
                             {
                                 //typing at end of word
-                                currentTempChars.Add(Input.inputString);
+                                currentTempChars.Add(s);
                                 temporaryLetterTiles.Add(selectedTile);
 
                                 GameObject g = Instantiate(stringToTileScript.StringTile(s),
@@ -1645,7 +1656,7 @@ public class Typing : MonoBehaviour
                                 temporaryTextTiles.Add(g);
                             }
 
-                            if (useLetterBank && !lockedStrDictionary.ContainsKey(selectedTile))
+                            if (useLetterBank && !lockedStrDictionary.ContainsKey(selectedTile) && !skipLetterBankConsume)
                             {
 
                                 for (int i = 0; i < letterBank.Count; i++)
@@ -1663,6 +1674,12 @@ public class Typing : MonoBehaviour
                                         break;
                                     }
                                 }
+                            }
+
+                            if (useLetterBank && letterToRefund != null)
+                            {
+                                letterBank.Add(letterToRefund);
+                                InitializeLetterBank();
                             }
                             
                             // OLD LINE (PRE LOCKEDLETTERTILE) if (wordTilemap.GetTile(selectedTile) != lockedLetterTile)
